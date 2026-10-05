@@ -1,0 +1,812 @@
+@import 'tailwindcss';
+@import '@fontsource/zilla-slab/400.css';
+@import '@fontsource/zilla-slab/500.css';
+@import '@fontsource/zilla-slab/600.css';
+@import '@fontsource/zilla-slab/700.css';
+@import '@fontsource-variable/mulish';
+
+@source "./**/*.{tsx,ts}";
+
+/* ==========================================================================
+   MATERIAL: Skeuomorphism. Field and Fable. One physical world: a wooden
+   bench, a steel console, kraft tags, brass dials, milled switches, ink
+   pressed into paper. No illustration, all of it built from CSS surfaces.
+
+   THE LOAD-BEARING CSS, so a reviewer can delete any block and watch the
+   material break:
+
+   1. .wood-deep / .wood / .wood-panel  WOOD GRAIN. Three layered
+      repeating-linear-gradients at shallow, slightly different angles
+      (94deg, 88deg, 101deg) for the fine pore lines, cathedral bands and
+      ring figure, over a tonal linear-gradient so the plank is never flat.
+      Delete it and the page becomes a flat brown rectangle.
+   2. .kraft / .kraft-edge              BAGGED PAPER. A four-stop
+      linear-gradient (never one colour) plus THREE offset radial-gradient
+      fibre speckles on their own background-size tiles, plus a 1px / 3px
+      tooth pass. Delete it and the tags read as painted divs.
+   3. .plate / .plate-inset             BRUSHED SLATE FACEPLATE. Anisotropic
+      repeating-linear-gradient brush pass, top bevel, bottom shade.
+   4. .dial + .dial-bezel + .dial-scale + .dial-hand + .dial-boss
+      BRASS DIAL. conic-gradient brushed-brass face, repeating-conic-gradient
+      knurled bezel ring masked to an annulus, a 122deg specular sweep, tick
+      scale masked to a thinner annulus, an ember pointer notch on a hub.
+   5. .toggle + .toggle-cap + .toggle-led   PHYSICAL SWITCH. Ridged metal
+      track with an inset groove, a milled cylinder cap that slides, an
+      ember indicator lamp that lights when closed.
+   6. .stamp / .stamp-light             LETTERPRESS. Slab type with a paired
+      light / dark text-shadow, so the ink sits inside the sheet.
+   7. .rivet                            Machined screw head, radial-gradient.
+
+   SHAPE RULE: one radius, 6px, locked site-wide. The only exceptions are
+   parts of physical hardware, where a circle is the geometry and not a
+   design choice: .dial and its bezel / boss, .toggle and its cap, .rivet,
+   which are all true circles at 999px.
+   ========================================================================== */
+
+@theme {
+  /* Roast browns, dark to light. The page ground is the darkest. */
+  --color-roast-950: #1e1510;
+  --color-roast-900: #271c15;
+  --color-roast-800: #322519;
+  --color-roast-700: #40301f;
+  --color-roast-600: #523d29;
+  --color-bark: #6b4a33;
+  --color-burl: #8a654a;
+
+  /* Bagged kraft stock. Mid tan, deliberately well clear of the cream set. */
+  --color-kraft: #c2a482;
+  --color-kraft-hi: #cfb389;
+  --color-kraft-lo: #a6855f;
+  /* Print ink on kraft, and the printed browns that stay AA on kraft. */
+  --color-ink: #2a1d14;
+  --color-ink-soft: #42301e;
+
+  /* Slate: the steel of the console. Cool by nature, like real hardware.
+     This is the one documented exception to the single warm temperature:
+     it only ever appears on metal, lit by the same warm room light. */
+  --color-slate-950: #1b2126;
+  --color-slate-800: #262d33;
+  --color-slate-600: #3b454c;
+  --color-slate-400: #7c8890;
+  --color-slate-300: #8b979f;
+  --color-slate-200: #c3ccd1;
+
+  /* Type on the warm surfaces. */
+  --color-chalk: #e2dacd;
+  --color-bone: #c0af98;
+  --color-ash: #9d8b73;
+
+  /* Brass. Metal only, never an accent: the dial face and the rivets. */
+  --color-brass-hi: #f2e4bb;
+  --color-brass-mid: #c2a05f;
+  --color-brass-lo: #7d6229;
+
+  /* THE ONE ACCENT. Live ember: hue 19, saturation 75. */
+  --color-ember: #e3703c;
+  --color-ember-deep: #c4521c;
+
+  --font-display: 'Zilla Slab', Georgia, serif;
+  --font-sans: 'Mulish Variable', system-ui, sans-serif;
+  /* No mono package in this slug, so small technical metadata is set in
+     Mulish at heavy tracking. Never used for body copy. */
+  --font-mono: 'Mulish Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --radius-fable: 6px;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-radius: var(--radius-fable);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-roast-950);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* THE BENCH. Fixed so the whole page is one plank of wood and the grain
+     does not shift as the user scrolls. This is block 1 of the material. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-color: var(--color-roast-900);
+    background-image:
+      repeating-linear-gradient(94deg, rgb(16 10 6 / 0.5) 0 1px, rgb(0 0 0 / 0) 1px 7px),
+      repeating-linear-gradient(88deg, rgb(138 101 74 / 0.1) 0 1px, rgb(0 0 0 / 0) 1px 17px),
+      repeating-linear-gradient(101deg, rgb(82 61 41 / 0.17) 0 3px, rgb(0 0 0 / 0) 3px 29px),
+      linear-gradient(172deg, rgb(82 61 41 / 0.3) 0%, rgb(0 0 0 / 0) 44%),
+      linear-gradient(168deg, #2d2219 0%, #241a13 46%, #1c1410 100%);
+  }
+
+  ::selection {
+    background-color: var(--color-ember);
+    color: var(--color-roast-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ember);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  ::placeholder {
+    color: var(--color-ash);
+    opacity: 0.72;
+  }
+}
+
+@layer components {
+  .shell {
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------------
+     1. WOOD. Shallow-angle grain from layered repeating gradients. The
+     three passes sit at 94, 88 and 101 degrees so no two lines cross
+     cleanly and the figure reads as sawn timber, not wallpaper.
+     --------------------------------------------------------------------- */
+  .wood-deep {
+    background-color: var(--color-roast-900);
+    background-image:
+      repeating-linear-gradient(94deg, rgb(16 10 6 / 0.5) 0 1px, rgb(0 0 0 / 0) 1px 7px),
+      repeating-linear-gradient(88deg, rgb(138 101 74 / 0.1) 0 1px, rgb(0 0 0 / 0) 1px 17px),
+      repeating-linear-gradient(101deg, rgb(82 61 41 / 0.17) 0 3px, rgb(0 0 0 / 0) 3px 29px),
+      linear-gradient(172deg, rgb(82 61 41 / 0.28) 0%, rgb(0 0 0 / 0) 46%),
+      linear-gradient(168deg, #2d2219 0%, #241a13 46%, #1c1410 100%);
+  }
+
+  .wood {
+    background-color: var(--color-roast-800);
+    background-image:
+      repeating-linear-gradient(95deg, rgb(16 10 6 / 0.42) 0 1px, rgb(0 0 0 / 0) 1px 8px),
+      repeating-linear-gradient(87deg, rgb(150 112 82 / 0.11) 0 1px, rgb(0 0 0 / 0) 1px 19px),
+      repeating-linear-gradient(103deg, rgb(64 46 30 / 0.2) 0 4px, rgb(0 0 0 / 0) 4px 34px),
+      linear-gradient(170deg, rgb(107 74 51 / 0.26) 0%, rgb(0 0 0 / 0) 52%),
+      linear-gradient(166deg, #3a2b1e 0%, #2e2318 54%, #241a12 100%);
+  }
+
+  /* Raised plank: grain plus a lit top arris and a shaded bottom one. */
+  .wood-panel {
+    background-color: var(--color-roast-900);
+    background-image:
+      repeating-linear-gradient(96deg, rgb(16 10 6 / 0.4) 0 1px, rgb(0 0 0 / 0) 1px 9px),
+      repeating-linear-gradient(87deg, rgb(150 112 82 / 0.09) 0 1px, rgb(0 0 0 / 0) 1px 21px),
+      repeating-linear-gradient(102deg, rgb(64 46 30 / 0.18) 0 4px, rgb(0 0 0 / 0) 4px 37px),
+      linear-gradient(168deg, #322619 0%, #281d15 58%, #1f160f 100%);
+    box-shadow:
+      inset 0 1px 0 rgb(150 112 82 / 0.2),
+      inset 0 -1px 0 rgb(0 0 0 / 0.55);
+  }
+
+  /* Sunken tray: the surface a bag of coffee actually sits in. */
+  .tray {
+    background-color: var(--color-roast-800);
+    background-image:
+      repeating-linear-gradient(96deg, rgb(16 10 6 / 0.36) 0 1px, rgb(0 0 0 / 0) 1px 10px),
+      repeating-linear-gradient(88deg, rgb(150 112 82 / 0.08) 0 1px, rgb(0 0 0 / 0) 1px 23px),
+      repeating-linear-gradient(102deg, rgb(64 46 30 / 0.16) 0 5px, rgb(0 0 0 / 0) 5px 41px),
+      linear-gradient(164deg, #362819 0%, #2b2117 60%, #221810 100%);
+    border: 1px solid rgb(14 9 5 / 0.8);
+    box-shadow:
+      inset 0 2px 4px rgb(9 6 3 / 0.5),
+      inset 0 -1px 0 rgb(150 112 82 / 0.16),
+      0 14px 28px -20px rgb(8 5 3 / 0.9);
+  }
+
+  /* Picture frame routed round a photo: outer arris, inner rebate. */
+  .wood-frame {
+    border: 1px solid rgb(14 9 5 / 0.85);
+    background-color: var(--color-roast-700);
+    background-image:
+      repeating-linear-gradient(97deg, rgb(16 10 6 / 0.3) 0 1px, rgb(0 0 0 / 0) 1px 11px),
+      repeating-linear-gradient(87deg, rgb(150 112 82 / 0.09) 0 1px, rgb(0 0 0 / 0) 1px 25px),
+      linear-gradient(160deg, #4b3826 0%, #3a2b1d 100%);
+    padding: 10px;
+    box-shadow:
+      inset 0 1px 0 rgb(168 128 92 / 0.28),
+      0 16px 32px -22px rgb(8 5 3 / 0.95);
+  }
+
+  /* ---------------------------------------------------------------------
+     2. KRAFT. Four-stop sheet plus three offset fibre speckles on their
+     own tiles, plus a 1px tooth pass. The speckle tiles are what stop it
+     reading as a flat tan rectangle.
+     --------------------------------------------------------------------- */
+  .kraft {
+    background-color: var(--color-kraft);
+    background-image:
+      radial-gradient(circle at 21% 28%, rgb(74 52 34 / 0.17) 0 1px, rgb(0 0 0 / 0) 1.7px),
+      radial-gradient(circle at 73% 61%, rgb(245 232 208 / 0.16) 0 1px, rgb(0 0 0 / 0) 1.8px),
+      radial-gradient(circle at 44% 84%, rgb(74 52 34 / 0.13) 0 1.3px, rgb(0 0 0 / 0) 2px),
+      repeating-linear-gradient(93deg, rgb(74 52 34 / 0.05) 0 1px, rgb(0 0 0 / 0) 1px 3px),
+      linear-gradient(168deg, #cfb389 0%, #c2a482 36%, #b2946d 74%, #a6855f 100%);
+    background-size:
+      46px 46px,
+      58px 58px,
+      71px 71px,
+      auto,
+      auto;
+    color: var(--color-ink);
+    box-shadow:
+      inset 0 1px 0 rgb(245 232 208 / 0.4),
+      inset 0 -1px 0 rgb(74 52 34 / 0.35),
+      0 14px 28px -20px rgb(8 5 3 / 0.85);
+  }
+
+  /* ---------------------------------------------------------------------
+     3. SLATE FACEPLATE. Anisotropic brush pass + bevel. The one cool
+     surface on the page, and it is the machine.
+     --------------------------------------------------------------------- */
+  .plate {
+    background-color: var(--color-slate-800);
+    background-image:
+      linear-gradient(160deg, rgb(255 255 255 / 0.1), rgb(0 0 0 / 0) 46%),
+      repeating-linear-gradient(91deg, rgb(255 255 255 / 0.035) 0 1px, rgb(0 0 0 / 0.055) 1px 2px),
+      repeating-linear-gradient(88deg, rgb(0 0 0 / 0.04) 0 3px, rgb(0 0 0 / 0) 3px 9px),
+      linear-gradient(180deg, #343d45 0%, #262d33 58%, #1e2429 100%);
+    border: 1px solid rgb(11 15 18 / 0.9);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.17),
+      inset 0 -1px 0 rgb(0 0 0 / 0.55),
+      0 20px 38px -26px rgb(8 5 3 / 0.95);
+  }
+
+  /* Recessed channel milled into the plate, used for the tick legend. */
+  .plate-inset {
+    background-color: var(--color-slate-950);
+    background-image:
+      repeating-linear-gradient(91deg, rgb(255 255 255 / 0.03) 0 1px, rgb(0 0 0 / 0) 1px 3px),
+      linear-gradient(180deg, #171d21 0%, #1e242a 100%);
+    box-shadow:
+      inset 0 2px 4px rgb(4 6 8 / 0.8),
+      inset 0 -1px 0 rgb(255 255 255 / 0.07);
+  }
+
+  /* ---------------------------------------------------------------------
+     4. THE DIAL. Brass face, knurled bezel, tick scale, ember pointer.
+     --------------------------------------------------------------------- */
+  .dial {
+    position: relative;
+    width: 232px;
+    height: 232px;
+    border-radius: 999px;
+    cursor: grab;
+    touch-action: none;
+    background:
+      /* specular sweep travelling across the face */
+      linear-gradient(
+        122deg,
+        rgb(255 250 230 / 0.6) 0%,
+        rgb(255 250 230 / 0.08) 24%,
+        rgb(0 0 0 / 0) 62%,
+        rgb(28 20 10 / 0.34) 100%
+      ),
+      /* brushed brass, anisotropic, rotating off centre */
+      repeating-conic-gradient(
+        from 12deg,
+        rgb(255 246 226 / 0.15) 0deg 1.5deg,
+        rgb(74 56 24 / 0.12) 1.5deg 3.1deg
+      ),
+      /* the metal itself */
+      conic-gradient(
+        from 206deg,
+        #7d6229 0deg,
+        #a98b45 38deg,
+        #f2e4bb 84deg,
+        #b1904d 132deg,
+        #f6ecd0 178deg,
+        #a1813f 236deg,
+        #6d5522 288deg,
+        #c2a05f 336deg,
+        #7d6229 360deg
+      );
+    box-shadow:
+      inset 0 2px 3px rgb(255 246 216 / 0.42),
+      inset 0 -4px 7px rgb(44 31 12 / 0.6),
+      0 12px 24px -12px rgb(6 4 2 / 0.9);
+  }
+
+  .dial:active {
+    cursor: grabbing;
+  }
+
+  @media (max-width: 639px) {
+    .dial {
+      width: 206px;
+      height: 206px;
+    }
+  }
+
+  /* Knurled bezel ring: a repeating conic masked down to an annulus. */
+  .dial-bezel {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: repeating-conic-gradient(
+      from 0deg,
+      rgb(255 246 226 / 0.55) 0deg 1.1deg,
+      rgb(58 42 16 / 0.6) 1.1deg 2.7deg
+    );
+    -webkit-mask: radial-gradient(
+      closest-side,
+      rgb(0 0 0 / 0) calc(100% - 15px),
+      #000 calc(100% - 15px)
+    );
+    mask: radial-gradient(closest-side, rgb(0 0 0 / 0) calc(100% - 15px), #000 calc(100% - 15px));
+    box-shadow: inset 0 1px 2px rgb(255 246 220 / 0.35);
+  }
+
+  /* Engraved tick scale, also an annulus mask. Conic 0deg is 12 o'clock and
+     runs clockwise, so the four detents sit at 225 / 315 / 45 / 135 degrees.
+     Major ticks land on those four, minors every 30 degrees between them. */
+  .dial-scale {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background:
+      repeating-conic-gradient(
+        from 225deg,
+        rgb(38 26 14 / 0.88) 0deg 1.7deg,
+        rgb(0 0 0 / 0) 1.7deg 90deg
+      ),
+      repeating-conic-gradient(
+        from 225deg,
+        rgb(38 26 14 / 0.46) 0deg 0.9deg,
+        rgb(0 0 0 / 0) 0.9deg 30deg
+      );
+    -webkit-mask: radial-gradient(
+      closest-side,
+      rgb(0 0 0 / 0) calc(100% - 30px),
+      #000 calc(100% - 30px) calc(100% - 22px),
+      rgb(0 0 0 / 0) calc(100% - 22px)
+    );
+    mask: radial-gradient(
+      closest-side,
+      rgb(0 0 0 / 0) calc(100% - 30px),
+      #000 calc(100% - 30px) calc(100% - 22px),
+      rgb(0 0 0 / 0) calc(100% - 22px)
+    );
+  }
+
+  /* The pointer notch, driven by --dial-angle from React state. */
+  .dial-hand {
+    position: absolute;
+    inset: 0;
+    transform: rotate(var(--dial-angle, 0deg));
+    transition: transform 300ms cubic-bezier(0.34, 1.24, 0.64, 1);
+  }
+
+  .dial-hand::before {
+    content: '';
+    position: absolute;
+    top: 13%;
+    left: 50%;
+    width: 5px;
+    height: 24%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #f8a771 0%, var(--color-ember) 58%, #a83f16 100%);
+    box-shadow:
+      0 0 7px rgb(227 112 60 / 0.55),
+      0 1px 0 rgb(255 244 226 / 0.45);
+  }
+
+  /* Counterweight tail, so the pointer reads as a real part. */
+  .dial-hand::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 50%;
+    width: 7px;
+    height: 11%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #2b1e10 0%, #4a351b 100%);
+    box-shadow: 0 1px 0 rgb(255 246 220 / 0.3);
+  }
+
+  .dial-boss {
+    position: absolute;
+    inset: 33%;
+    border-radius: 999px;
+    background:
+      linear-gradient(150deg, rgb(255 250 230 / 0.72) 0%, rgb(0 0 0 / 0) 46%),
+      conic-gradient(
+        from 40deg,
+        #7d6229 0deg,
+        #e2cd9a 70deg,
+        #8e7033 150deg,
+        #f4e9c9 230deg,
+        #775c26 320deg,
+        #7d6229 360deg
+      );
+    box-shadow:
+      inset 0 1px 1px rgb(255 250 230 / 0.5),
+      0 2px 5px rgb(30 20 8 / 0.6);
+  }
+
+  /* ---------------------------------------------------------------------
+     5. THE SWITCH. Ridged metal track, milled sliding cap, indicator lamp.
+     --------------------------------------------------------------------- */
+  .toggle {
+    position: relative;
+    width: 88px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    border: 1px solid rgb(9 12 15 / 0.9);
+    background-image:
+      linear-gradient(180deg, rgb(255 250 235 / 0.16), rgb(0 0 0 / 0) 44%),
+      repeating-linear-gradient(
+        90deg,
+        rgb(255 250 235 / 0.07) 0 1px,
+        rgb(0 0 0 / 0.07) 1px 3px
+      ),
+      linear-gradient(180deg, #4d565d 0%, #333b42 48%, #222a30 100%);
+    box-shadow:
+      inset 0 3px 7px rgb(6 9 12 / 0.85),
+      inset 0 -1px 0 rgb(255 250 235 / 0.16),
+      0 2px 4px rgb(16 10 6 / 0.55);
+    transition: box-shadow 240ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .toggle[data-on='true'] {
+    box-shadow:
+      inset 0 2px 5px rgb(6 9 12 / 0.6),
+      inset 0 0 10px rgb(227 112 60 / 0.35),
+      inset 0 -1px 0 rgb(255 250 235 / 0.14),
+      0 2px 4px rgb(16 10 6 / 0.55);
+  }
+
+  /* Milled cylinder: vertical knurling plus the rolling highlight. */
+  .toggle-cap {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background-image:
+      linear-gradient(150deg, rgb(255 252 240 / 0.88) 0%, rgb(0 0 0 / 0) 44%),
+      repeating-linear-gradient(92deg, rgb(58 42 20 / 0.22) 0 1px, rgb(0 0 0 / 0) 1px 3px),
+      linear-gradient(180deg, #e6e7e0 0%, #b8bbb3 44%, #868a81 100%);
+    box-shadow:
+      0 2px 5px rgb(6 8 11 / 0.65),
+      inset 0 1px 0 rgb(255 255 250 / 0.9),
+      inset 0 -1px 1px rgb(0 0 0 / 0.3);
+    transition: transform 250ms cubic-bezier(0.34, 1.3, 0.64, 1);
+  }
+
+  .toggle[data-on='true'] .toggle-cap {
+    transform: translateX(48px);
+  }
+
+  .toggle-led {
+    position: absolute;
+    top: 50%;
+    left: 11px;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 38% 32%, #6b6157 0%, #2e2a26 70%);
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.7);
+    transition:
+      background 260ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .toggle[data-on='true'] .toggle-led {
+    background: radial-gradient(circle at 38% 32%, #f6b285 0%, var(--color-ember) 62%, #a8431a 100%);
+    box-shadow:
+      0 0 8px rgb(227 112 60 / 0.75),
+      inset 0 1px 1px rgb(255 220 190 / 0.5);
+  }
+
+  .toggle[data-on='true'] .toggle-led::after {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgb(227 112 60 / 0.3), rgb(0 0 0 / 0) 70%);
+  }
+
+  /* Machined screw head. */
+  .rivet {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 34% 28%, #f2e7c8 0%, #b99c58 52%, #6b5426 100%);
+    box-shadow:
+      inset 0 -1px 1px rgb(0 0 0 / 0.4),
+      0 1px 1px rgb(0 0 0 / 0.65);
+  }
+
+  /* ---------------------------------------------------------------------
+     6. LETTERPRESS. Paired light and dark text-shadow so the ink reads as
+     pressed into the sheet, and stamped-into-metal on the slate plate.
+     --------------------------------------------------------------------- */
+  .stamp {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    color: var(--color-ink);
+    text-shadow: 0 1px 0 rgb(238 224 198 / 0.5);
+  }
+
+  .stamp-light {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.005em;
+    color: var(--color-chalk);
+    text-shadow:
+      0 1px 0 rgb(255 240 214 / 0.12),
+      0 -1px 0 rgb(0 0 0 / 0.4);
+  }
+
+  /* Engraved into the faceplate: highlight below, shade above. */
+  .engrave {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: var(--color-slate-300);
+    text-shadow:
+      0 1px 0 rgb(255 255 255 / 0.11),
+      0 -1px 1px rgb(0 0 0 / 0.65);
+  }
+
+  .micro {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ash);
+  }
+
+  /* Letterpress key on kraft: presses into the sheet when it is selected. */
+  .tab {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    color: var(--color-ink);
+    border: 1px solid rgb(74 52 34 / 0.55);
+    background-color: rgb(238 224 198 / 0.28);
+    box-shadow:
+      inset 0 1px 0 rgb(245 232 208 / 0.55),
+      0 2px 0 rgb(122 96 66 / 0.5);
+    text-shadow: 0 1px 0 rgb(238 224 198 / 0.5);
+    transition:
+      transform 140ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 140ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .tab[aria-pressed='true'] {
+    background-color: var(--color-ink);
+    color: var(--color-kraft-hi);
+    border-color: rgb(24 16 10 / 0.9);
+    box-shadow: inset 0 2px 5px rgb(0 0 0 / 0.55);
+    text-shadow: 0 -1px 0 rgb(0 0 0 / 0.5);
+    transform: translateY(1px);
+  }
+
+  /* Moulded key. The bottom arris is a solid lip that the press collapses. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    white-space: nowrap;
+    padding: 0.8rem 1.4rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    transition:
+      transform 130ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 130ms cubic-bezier(0.32, 0.72, 0, 1),
+      filter 130ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .btn-primary {
+    color: #2a1408;
+    border: 1px solid rgb(122 45 12 / 0.9);
+    background-image:
+      linear-gradient(180deg, rgb(255 226 200 / 0.45), rgb(0 0 0 / 0) 52%),
+      linear-gradient(180deg, #f08a52 0%, var(--color-ember) 100%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 232 210 / 0.65),
+      0 3px 0 rgb(122 45 12 / 0.95),
+      0 10px 18px -12px rgb(227 112 60 / 0.75);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.06);
+  }
+
+  .btn-primary:active {
+    transform: translateY(3px);
+    box-shadow:
+      inset 0 2px 5px rgb(122 45 12 / 0.6),
+      0 0 0 rgb(0 0 0 / 0),
+      0 0 0 0 transparent;
+  }
+
+  .btn-ghost {
+    color: var(--color-chalk);
+    border: 1px solid rgb(11 15 18 / 0.9);
+    background-image:
+      linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(0 0 0 / 0) 50%),
+      linear-gradient(180deg, #3d474f 0%, #2a3238 54%, #20272c 100%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.16),
+      0 3px 0 rgb(11 14 17 / 0.92),
+      0 10px 18px -14px rgb(0 0 0 / 0.9);
+  }
+
+  .btn-ghost:hover {
+    filter: brightness(1.14);
+  }
+
+  .btn-ghost:active {
+    transform: translateY(3px);
+    box-shadow:
+      inset 0 2px 5px rgb(0 0 0 / 0.6),
+      0 0 0 rgb(0 0 0 / 0);
+  }
+
+  /* Icon nested inside the button, flush with its right padding. */
+  .btn-icon {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: -0.6rem;
+    border-radius: 999px;
+    background: rgb(42 20 8 / 0.16);
+    transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .btn:hover .btn-icon {
+    transform: translate(2px, -1px);
+  }
+
+  .btn-ghost .btn-icon {
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 620ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .link-underline {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: rgb(160 130 96 / 0.5);
+    transition: text-decoration-color 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .link-underline:hover {
+    text-decoration-color: var(--color-ember);
+  }
+
+  .kraft .link-underline {
+    text-decoration-color: rgb(74 52 34 / 0.5);
+  }
+
+  .kraft .link-underline:hover {
+    text-decoration-color: var(--color-ember-deep);
+  }
+
+  /* A slot milled into the console: recessed, hard to read against, so
+     the caret and the typed value both need the ember focus ring. */
+  .field {
+    width: 100%;
+    padding: 0.72rem 0.85rem;
+    color: var(--color-slate-200);
+    background-color: var(--color-slate-950);
+    background-image:
+      linear-gradient(180deg, #171d21 0%, #1e242a 100%);
+    border: 1px solid rgb(9 12 15 / 0.9);
+    font-size: 0.9375rem;
+    box-shadow:
+      inset 0 2px 4px rgb(4 6 8 / 0.7),
+      inset 0 -1px 0 rgb(255 255 255 / 0.06);
+    transition:
+      border-color 300ms cubic-bezier(0.32, 0.72, 0, 1),
+      box-shadow 300ms cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .field::placeholder {
+    color: var(--color-slate-400);
+    opacity: 1;
+  }
+
+  .field:focus {
+    outline: none;
+    border-color: var(--color-ember);
+    box-shadow:
+      inset 0 2px 4px rgb(4 6 8 / 0.7),
+      0 0 0 2px rgb(227 112 60 / 0.34);
+  }
+
+  .field[aria-invalid='true'] {
+    border-color: var(--color-ember);
+    box-shadow:
+      inset 0 2px 4px rgb(4 6 8 / 0.7),
+      inset 0 0 12px rgb(227 112 60 / 0.22);
+  }
+
+  .field:disabled {
+    color: var(--color-slate-400);
+    background-image: linear-gradient(180deg, #141a1e 0%, #1a2025 100%);
+  }
+
+  .field option {
+    background-color: var(--color-slate-950);
+    color: var(--color-slate-200);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .dial-hand,
+  .toggle-cap,
+  .toggle-led {
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
